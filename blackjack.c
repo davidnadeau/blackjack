@@ -114,32 +114,19 @@ char get_rank(int card)
     c = card % 13;
     switch (c)
     {
-        case 0:
-            return 'A';
-        case 1:
-            return '2';
-        case 2:
-            return '3';
-        case 3:
-            return '4';
-        case 4:
-            return '5';
-        case 5:
-            return '6';
-        case 6:
-            return '7';
-        case 7:
-            return '8';
-        case 8:
-            return '9';
-        case 9:
-            return 'T';
-        case 10:
-            return 'J';
-        case 11:
-            return 'Q';
-        case 12:
-            return 'K';
+        case 0:     return 'A';
+        case 1:     return '2';
+        case 2:     return '3';
+        case 3:     return '4';
+        case 4:     return '5';
+        case 5:     return '6';
+        case 6:     return '7';
+        case 7:     return '8';
+        case 8:     return '9';
+        case 9:     return 'T';
+        case 10:    return 'J';
+        case 11:    return 'Q';
+        case 12:    return 'K';
     }
 }
 int get_value(int card)
@@ -244,15 +231,12 @@ void show_welcome()
 }
 void print_hand(int *hand, char *user)
 {
-    char card_rank, suite;
     int i, card_count;
     card_count = count_cards(hand);
     printf("%s: ", user);
     for (i = 0; i < card_count; ++i)
     {
-        card_rank = get_rank(hand[i]);
-        suite = get_suite(hand[i]);
-        printf("%c%c\t",card_rank,suite);
+        printf("%c%c\t",get_rank(hand[i]), get_suite(hand[i]));
     }
     printf("\n");
 }
@@ -273,19 +257,15 @@ void player_loop()
 {
     int icard;//stores index where the store new cards will be placed in players hand
     int score;
-    char card_rank, suite;
     while (1)
     {
         printf("h/s: ");
         getchar();
         if ( getchar() == 'h')
         {
-            printf("IN H\n");
             icard = count_cards(player_hand);
             player_hand[icard] = get_new_card();
-            card_rank = get_rank(player_hand[icard]);
-            suite = get_suite(player_hand[icard]);
-            printf("%c%c\n",card_rank,suite);
+            printf("%c%c\n", get_rank(player_hand[icard]),get_suite(player_hand[icard]));
             score = tally_hand(player_hand);
             if (score > 21)
             {
@@ -301,7 +281,7 @@ void house_loop()
     int icard;//store amt of cards in house hand
     while (1)
     {
-        //make method to prnit total of array
+        //make method to print total of array
         if (tally_hand(house_hand) < 18)
         {
             icard = count_cards(house_hand);
@@ -315,21 +295,21 @@ void house_loop()
 }
 void judgement()
 {
-    int house, player;
+    int houseScore, playerScore, house, player;
     house = tally_hand(house_hand);
     player = tally_hand(player_hand);
 
-    house = 21-house;
-    player = 21-player;
+    houseScore = 21-house;
+    playerScore = 21-player;
 
-    if (house < 0)
-        printf("Player: %d, Dealer: %d You Win!\n",tally_hand(player_hand),tally_hand(house_hand));
-    else if (player < house)
-        printf("Player: %d, Dealer: %d You Win!\n",tally_hand(player_hand),tally_hand(house_hand));
-    else if (player > house)
-        printf("Player: %d, Dealer: %d You Lose!\n",tally_hand(player_hand),tally_hand(house_hand));
-    else if (player == house)
-        printf("Player: %d, Dealer: %d Push, no winner!\n",tally_hand(player_hand),tally_hand(house_hand));
+    if (houseScore < 0)
+        printf("Player: %d, Dealer: %d You Win!\n",player,house);
+    else if (playerScore < houseScore)
+        printf("Player: %d, Dealer: %d You Win!\n",player,house);
+    else if (playerScore > houseScore)
+        printf("Player: %d, Dealer: %d You Lose!\n",player,house);
+    else if (playerScore == houseScore)
+        printf("Player: %d, Dealer: %d Push, no winner!\n",player,house);
 }
 
 /*
@@ -348,6 +328,7 @@ int main()
         {
             clear_hand(player_hand);
             clear_hand(house_hand);
+            load_deck();
             shuffle_deck();
             initial_deal();
             print_hand(house_hand,"Dealer");
